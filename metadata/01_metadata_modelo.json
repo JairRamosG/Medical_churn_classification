@@ -10,16 +10,16 @@
         "model__logistic__l1_ratio": 0.2,
         "model__logistic__penalty": "elasticnet",
         "model__logistic__solver": "saga",
-        "model__rforest__max_depth": 13,
+        "model__rforest__max_depth": 10,
         "model__rforest__min_samples_split": 10,
         "model__rforest__n_estimators": 200,
         "model__svc__C": 1,
         "model__svc__kernel": "rbf",
         "model__xgboost__learning_rate": 1,
-        "model__xgboost__max_depth": 3,
+        "model__xgboost__max_depth": 5,
         "model__xgboost__n_estimators": 100,
         "smote__k_neighbors": 3
     },
-    "best_score": 0.7486426815193937,
+    "best_score": 0.03527253068159256,
     "scoring": "recall"
 }
