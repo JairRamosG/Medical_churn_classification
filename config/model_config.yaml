@@ -1,0 +1,36 @@
+seed: 42
+test_size: 0.2
+cv_splits: 3
+log_file: 'modelo_entrenamiento.log'
+target_variable: 'Churned'
+
+param_grid:
+    # Parámetros para Blender
+    'model__final_estimator__penalty': ['elasticnet']
+    'model__final_estimator__l1_ratio': [0.2]
+    'model__final_estimator__solver': ['saga']
+
+    # Parámetros para cada modelo base
+    'model__logistic__C': [0.01, 1]
+    'model__logistic__penalty': ['elasticnet']
+    'model__logistic__solver': ['saga']
+    'model__logistic__l1_ratio': [0.2]
+    
+    'model__rforest__n_estimators': [100, 200]
+    'model__rforest__max_depth': [10, 13]
+    'model__rforest__min_samples_split': [5, 10]
+    
+    'model__xgboost__n_estimators': [100]
+    'model__xgboost__max_depth': [3, 5]
+    'model__xgboost__learning_rate': [0.01, 1]
+
+    'model__knn__n_neighbors': [5, 7]
+
+    'model__svc__C': [0.01, 1]
+    'model__svc__kernel': ['rbf']
+
+    'model__gnb__var_smoothing': [1.0e-9]
+
+    'model__dtree__max_depth': [10]
+    
+    'smote__k_neighbors': [3]
