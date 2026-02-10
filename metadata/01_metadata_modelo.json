@@ -21,5 +21,26 @@
         "smote__k_neighbors": 3
     },
     "best_score": 0.03527253068159256,
-    "scoring": "recall"
+    "scoring": {
+        "Medida": {
+            "0": "Accuracy",
+            "1": "Error Rate",
+            "2": "Recall (Sensitivity)",
+            "3": "Specificity",
+            "4": "Balanced Accuracy",
+            "5": "Precision",
+            "6": "F1 Score",
+            "7": "MCC"
+        },
+        "Valor": {
+            "0": 0.595,
+            "1": 0.405,
+            "2": 0.7509157509157509,
+            "3": 0.25984251968503935,
+            "4": 0.5053791353003951,
+            "5": 0.68561872909699,
+            "6": 0.7167832167832168,
+            "7": 0.011527347003303058
+        }
+    }
 }

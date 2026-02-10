@@ -1,0 +1,6 @@
+2026-02-10 16:04:49,935 - INFO - Datos cargados correctamente desde /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/data/raw/patient_churn_dataset.csv
+2026-02-10 16:07:00,395 - INFO - Datos cargados correctamente desde /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/data/raw/patient_churn_dataset.csv
+2026-02-10 16:13:43,495 - INFO - Modelo entrenado correctamente
+2026-02-10 16:13:43,873 - INFO - Medidas de desempeño calculadas
+2026-02-10 16:13:44,000 - INFO - Modelo guardado en: /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/models/01_medical_churn.pkl
+2026-02-10 16:13:44,002 - INFO - Metadatos guardados en: /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/metadata/01_metadata_modelo.json
