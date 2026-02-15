@@ -36,7 +36,7 @@ def train_model(config_path):
     Args:
         config_path (srt): Ruta de un archivo de configuración .yaml
     """
-    # Cargar el archivo de configuración
+    # CARGAR EL ARCHIVO DE CONFIGURACIÓN
     with open(config_path) as f:
         config = yaml.safe_load(f)
     
@@ -55,20 +55,20 @@ def train_model(config_path):
     METADATA_DIR.mkdir(parents=True, exist_ok=True)
     LOGS_DIR.mkdir(parents=True, exist_ok= True)
 
-    # Configurar el archivo para loggins
+    # CONFIGURAR EL ARCHIVO PARA LOS LOGGINS
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
 
-    handler = logging.FileHandler(LOGS_DIR / config['log_file']) ## usar un nombre desde yaml
+    handler = logging.FileHandler(LOGS_DIR / config['log_file'])
     handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logger.addHandler(handler)
 
-    # Semillas
+    # ESTABLECERLE UNAS SEMILLAS
     seed = config['seed']
     random.seed(seed)
     np.random.seed(seed)
 
-    # Cargar los datos
+    # CARGAR LOS DATOS PARA TRABAJAR
     logger.info("Iniciando el entrenamiento del modelo")
     if not DATA_FILE.exists():
         logger.error(f"Archivo de datos no encontrado en: {DATA_FILE}")
@@ -95,7 +95,7 @@ def train_model(config_path):
 
     logger.info(f"Todas las columnas requeridas están presentes")
 
-    # Separar target y hacer splits
+    # SEPARAR EL TARGET Y CREAR LOS SPLITS
     target_variable = config['target_variable']
     X = data.drop(columns = [target_variable])
     y = data[target_variable]
@@ -107,7 +107,7 @@ def train_model(config_path):
         stratify=y)
     logger.info("Datos divididos en train/test")
 
-    # Identificación de columnas numéricas, ordinales y nominales
+    # IDENTIFICACIÓN DE COLUMNAS NUMÉRICAS, ORDINALES Y NOMINALES
     real_ordinal_cols = ['Referrals_Made']
     real_nominal_cols = ['Billing_Issues', 'Portal_Usage'] 
 
@@ -122,6 +122,39 @@ def train_model(config_path):
     nominal_cols = [col for col in data.columns if col not in numerical_cols and col not in ordinal_cols and col != 'PatientID' and col != 'Last_Interaction_Date']
 
     logger.info(f"Columnas identificadas: numericas = {len(numerical_cols)} ordinales = {len(ordinal_cols)} nominales = {len(nominal_cols)}")
+
+    # CONSTRUIR EL PREPROCESSOR CON COLUMNTRANSFORMER
+
+    ## Pipeline para datos ordinales
+    ordinal_categories = [[0, 1, 2, 3]]
+    ord_pipeline = Pipeline([
+        ('ord_encoder', OrdinalEncoder(categories=ordinal_categories))
+    ])
+
+    ## Pipeline para datos nominales
+    ohe_drop_pipeline = Pipeline([
+        ('nom_ohe_dropfirst', OneHotEncoder(drop = 'first', handle_unknown='ignore'))
+    ])
+
+    ohe_pipeline = Pipeline([
+        ('nom_ohe', OneHotEncoder(handle_unknown='ignore'))
+    ])
+
+    frecuency_pipeline = Pipeline([
+        ('nom_frec', SafeFrequencyEncoder())
+    ])
+
+    ## ColumnTransformer
+    preprocesor = ColumnTransformer(
+        transformers = [
+            ('ord_encoder', ord_pipeline, ordinal_cols),
+            ('nom_ohe_dropfirst', ohe_drop_pipeline, ['Gender', 'Billing_Issues', 'Portal_Usage']),
+            ('nom_ohe', ohe_pipeline, ['Insurance_Type'] ),
+            ('nom_frec', frecuency_pipeline, ['State', 'Specialty']) 
+        ],
+        remainder='drop'
+    )
+    logger.info('preprocessor construido correctamente en un ColumnTransformer')
 
     pass
 
