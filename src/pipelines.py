@@ -13,8 +13,10 @@ from sklearn.tree import DecisionTreeClassifier
 
 from utils import FeatureEngineering, SafeFrequencyEncoder
 
-def build_preprocessor(ordinal_cols, ):
-     ## Pipeline para datos ordinales
+def build_preprocessor(numerical_cols, ordinal_cols, nominal_ohe_drop_cols, nominal_ohe_cols, freq_cols):
+    """Construye el ColumnTransformer con pipelines para cada tipo de dato."""
+    
+    ## Pipeline para datos ordinales
     ordinal_categories = [[0, 1, 2, 3]]
     ord_pipeline = Pipeline([
         ('ord_encoder', OrdinalEncoder(categories=ordinal_categories))
@@ -43,3 +45,40 @@ def build_preprocessor(ordinal_cols, ):
         ],
         remainder='drop'
     )
+
+    return preprocesor
+
+def build_model(seed):
+    """Construye el modelo de stacking."""
+
+    base_models = [
+    ('logistic', LogisticRegression(random_state=seed, max_iter=1000)),
+    ('rforest', RandomForestClassifier(random_state=seed)),
+    ('xgboost', XGBClassifier(random_state=seed, use_label_encoder=False, eval_metric='logloss')),
+    ('knn', KNeighborsClassifier()),
+    ('svc', SVC(random_state = seed)),
+    ('gnb', GaussianNB()),
+    ('dtree', DecisionTreeClassifier(random_state=seed))
+    ]
+    blender = LogisticRegression(random_state = seed)
+
+    return StackingClassifier(
+        estimators=base_models,
+        final_estimator=blender)
+
+def build_full_pipeline(numerical_cols, ordinal_cols, nominal_ohe_drop_cols, nominal_ohe_cols, freq_cols, seed):
+     """Construye el pipeline completo: FE + Preprocessor + SMOTE + Modelo."""
+    
+    preprocessor = build_preprocessor(numerical_cols, ordinal_cols, nominal_ohe_drop_cols, nominal_ohe_cols, freq_cols)
+    model = build_model(seed)
+
+    pipeline = Pipeline([
+    ('feature_engineering', FeatureEngineering()),
+    ('preprocessor', preprocessor),
+    ('smote', SMOTE(sampling_strategy='auto', random_state=seed)),
+    ('model', model)
+])
+    pass
+
+
+## Creo que tengo que hardcodear los parametros desde el archivo de config

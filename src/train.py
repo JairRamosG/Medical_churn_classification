@@ -39,6 +39,16 @@ def train_model(config_path):
     # CARGAR EL ARCHIVO DE CONFIGURACIÓN
     with open(config_path) as f:
         config = yaml.safe_load(f)
+
+    columnas_config = config.get('columnas', {})
+    
+    # Listas de columnas desde el config
+    IGNORAR_COLS = columnas_config.get('ignorar', [])
+    NUMERICAS_DEFINIDAS = columnas_config.get('numericas', [])
+    ORDINALES_DEFINIDAS = columnas_config.get('ordinales', [])
+    NOM_OHE_DROP_DEFINIDAS = columnas_config.get('nominales_ohe_drop', [])
+    NOM_OHE_DEFINIDAS = columnas_config.get('nominales_ohe', [])
+    NOM_FREQ_DEFINIDAS = columnas_config.get('nominales_frecuencia', [])
     
     # Raiz
     BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,12 +92,15 @@ def train_model(config_path):
         raise ValueError(f"Dataset vacío")
 
     # Validar que están todas las columnas esperadas
-    required_cols = [
-        'Churned', 
-        'PatientID', 'Age', 'Gender', 'State', 'Specialty', 'Insurance_Type',
-        'Visits_Last_Year', 'Missed_Appointments', 'Avg_Out_Of_Pocket_Cost',
-        'Referrals_Made', 'Billing_Issues', 'Portal_Usage', 'Last_Interaction_Date'
-    ]
+    required_cols = (
+        [config['target_variable']] + 
+        IGNORAR_COLS + 
+        NUMERICAS_DEFINIDAS + 
+        ORDINALES_DEFINIDAS + 
+        NOM_OHE_DROP_DEFINIDAS + 
+        NOM_OHE_DEFINIDAS + 
+        NOM_FREQ_DEFINIDAS
+    )
     missing_cols = [col for col in required_cols if col not in data.columns]
     if missing_cols:
         logger.error(f"Faltan columnas requeridas en el proceso: {missing_cols}")
@@ -108,31 +121,30 @@ def train_model(config_path):
     logger.info("Datos divididos en train/test")
 
     # IDENTIFICACIÓN DE COLUMNAS NUMÉRICAS, ORDINALES Y NOMINALES
-    real_ordinal_cols = ['Referrals_Made']
-    real_nominal_cols = ['Billing_Issues', 'Portal_Usage'] 
+    numerical_cols = NUMERICAS_DEFINIDAS.copy()  
+    
+    # 2. ORDINALES: Usamos las definidas en el config
+    ordinal_cols = ORDINALES_DEFINIDAS.copy()
+    
+    # 3. NOMINALES: Tenemos 3 grupos definidos en el config
+    nominal_ohe_drop_cols = NOM_OHE_DROP_DEFINIDAS.copy()
+    nominal_ohe_cols = NOM_OHE_DEFINIDAS.copy()
+    freq_cols = NOM_FREQ_DEFINIDAS.copy()
 
-    ##Numericas
-    numerical_cols = data.select_dtypes(include = ['int64', 'float64']).columns.tolist()
-    numerical_cols = [col for col in numerical_cols if col not in real_nominal_cols and col != 'PatientID']  
-
-    ##Categoricas Ordinales 
-    ordinal_cols = real_ordinal_cols
-
-    ##Categoricas Nominales
-    nominal_cols = [col for col in data.columns if col not in numerical_cols and col not in ordinal_cols and col != 'PatientID' and col != 'Last_Interaction_Date']
-
-    logger.info(f"Columnas identificadas: numericas = {len(numerical_cols)} ordinales = {len(ordinal_cols)} nominales = {len(nominal_cols)}")
-
-    # DEFINIR EXPLÍCITAMENTE LOS GRUPOS PARA EL PREPROCESSOR
-    nominal_ohe_drop_cols = ['Gender', 'Billing_Issues', 'Portal_Usage']
-    nominal_ohe_cols = ['Insurance_Type']
-    freq_cols = ['State', 'Specialty']
-
-    logger.info(f"Grupos de nominales: drop_first={nominal_ohe_drop_cols}, ohe={nominal_ohe_cols}, frecuencia={freq_cols}")
-
+    # IGNORADAS
+    ignored_cols = IGNORAR_COLS.copy()
+    
+    logger.info("Columnas desde el archivo de configuración:")
+    logger.info(f"Numéricas: {len(numerical_cols)}")
+    logger.info(f"Ordinales: {len(ordinal_cols)}")
+    logger.info(f"Nominales OHE: {len(nominal_ohe_cols)}")
+    logger.info(f"Nominales OHE DROP: {len(nominal_ohe_drop_cols)}")
+    logger.info(f"Nominales Frecuency: {len(freq_cols)}")
+    logger.info(f"Ignoradas: {len(ignored_cols)}")
+    
     # CONSTRUIR EL PREPROCESSOR CON COLUMNTRANSFORMER
-
-    logger.info('preprocessor construido correctamente en un ColumnTransformer')
+    pipeline = build_full_pipeline(numerical_cols, ordinal_cols, nominal_ohe_drop_cols, nominal_ohe_cols, freq_cols)
+    logger.info('sigue parametrizar una función para el pipeline')
 
     pass
 
