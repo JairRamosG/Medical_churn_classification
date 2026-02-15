@@ -123,37 +123,15 @@ def train_model(config_path):
 
     logger.info(f"Columnas identificadas: numericas = {len(numerical_cols)} ordinales = {len(ordinal_cols)} nominales = {len(nominal_cols)}")
 
+    # DEFINIR EXPLÍCITAMENTE LOS GRUPOS PARA EL PREPROCESSOR
+    nominal_ohe_drop_cols = ['Gender', 'Billing_Issues', 'Portal_Usage']
+    nominal_ohe_cols = ['Insurance_Type']
+    freq_cols = ['State', 'Specialty']
+
+    logger.info(f"Grupos de nominales: drop_first={nominal_ohe_drop_cols}, ohe={nominal_ohe_cols}, frecuencia={freq_cols}")
+
     # CONSTRUIR EL PREPROCESSOR CON COLUMNTRANSFORMER
 
-    ## Pipeline para datos ordinales
-    ordinal_categories = [[0, 1, 2, 3]]
-    ord_pipeline = Pipeline([
-        ('ord_encoder', OrdinalEncoder(categories=ordinal_categories))
-    ])
-
-    ## Pipeline para datos nominales
-    ohe_drop_pipeline = Pipeline([
-        ('nom_ohe_dropfirst', OneHotEncoder(drop = 'first', handle_unknown='ignore'))
-    ])
-
-    ohe_pipeline = Pipeline([
-        ('nom_ohe', OneHotEncoder(handle_unknown='ignore'))
-    ])
-
-    frecuency_pipeline = Pipeline([
-        ('nom_frec', SafeFrequencyEncoder())
-    ])
-
-    ## ColumnTransformer
-    preprocesor = ColumnTransformer(
-        transformers = [
-            ('ord_encoder', ord_pipeline, ordinal_cols),
-            ('nom_ohe_dropfirst', ohe_drop_pipeline, ['Gender', 'Billing_Issues', 'Portal_Usage']),
-            ('nom_ohe', ohe_pipeline, ['Insurance_Type'] ),
-            ('nom_frec', frecuency_pipeline, ['State', 'Specialty']) 
-        ],
-        remainder='drop'
-    )
     logger.info('preprocessor construido correctamente en un ColumnTransformer')
 
     pass

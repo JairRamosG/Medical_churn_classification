@@ -1,36 +1,83 @@
-seed: 42
-test_size: 0.2
-cv_splits: 3
+# config/model_config.yaml
+# Configuración para el modelo de Medical Churn Prediction
+
+# SEMILLAS Y PARÁMETROS BÁSICOS
 log_file: 'modelo_entrenamiento.log'
 target_variable: 'Churned'
 
+seed: 42
+test_size: 0.2
+cv_splits: 3
+
+
+# DEFINICIÓN DE COLUMNAS
+columnas:
+  # Columnas que se IGNORAN 
+  ignorar:
+    - 'PatientID'
+    - 'Last_Interaction_Date'
+  
+  # Columnas NUMÉRICAS 
+  numericas:
+    - 'Age'
+    - 'Visits_Last_Year'
+    - 'Missed_Appointments'
+    - 'Avg_Out_Of_Pocket_Cost'
+  
+  # Columnas ORDINALES 
+  ordinales:
+    - 'Referrals_Made'
+  
+  # Columnas NOMINALES con OneHotEncoding (drop first)
+  nominales_ohe_drop:
+    - 'Gender'
+    - 'Billing_Issues'
+    - 'Portal_Usage'
+  
+  # Columnas NOMINALES con OneHotEncoding normal
+  nominales_ohe:
+    - 'Insurance_Type'
+  
+  # Columnas NOMINALES con Frequency Encoding (alta cardinalidad)
+  nominales_frecuencia:
+    - 'State'
+    - 'Specialty'
+
+# BÚSQUEDA DE HIPERPARÁMETROS 
 param_grid:
-    # Parámetros para Blender
-    'model__final_estimator__penalty': ['elasticnet']
-    'model__final_estimator__l1_ratio': [0.2]
-    'model__final_estimator__solver': ['saga']
+  # Blender
+  'model__final_estimator__penalty': ['elasticnet']
+  'model__final_estimator__l1_ratio': [0.2]
+  'model__final_estimator__solver': ['saga']
 
-    # Parámetros para cada modelo base
-    'model__logistic__C': [0.01, 1]
-    'model__logistic__penalty': ['elasticnet']
-    'model__logistic__solver': ['saga']
-    'model__logistic__l1_ratio': [0.2]
-    
-    'model__rforest__n_estimators': [100, 200]
-    'model__rforest__max_depth': [10, 13]
-    'model__rforest__min_samples_split': [5, 10]
-    
-    'model__xgboost__n_estimators': [100]
-    'model__xgboost__max_depth': [3, 5]
-    'model__xgboost__learning_rate': [0.01, 1]
+  # Logistic Regression
+  'model__logistic__C': [0.01, 1]
+  'model__logistic__penalty': ['elasticnet']
+  'model__logistic__solver': ['saga']
+  'model__logistic__l1_ratio': [0.2]
+  
+  # Random Forest
+  'model__rforest__n_estimators': [100, 200]
+  'model__rforest__max_depth': [10, 13]
+  'model__rforest__min_samples_split': [5, 10]
+  
+  # XGBoost
+  'model__xgboost__n_estimators': [100]
+  'model__xgboost__max_depth': [3, 5]
+  'model__xgboost__learning_rate': [0.01, 1]
 
-    'model__knn__n_neighbors': [5, 7]
+  # KNN
+  'model__knn__n_neighbors': [5, 7]
 
-    'model__svc__C': [0.01, 1]
-    'model__svc__kernel': ['rbf']
+  # SVC
+  'model__svc__C': [0.01, 1]
+  'model__svc__kernel': ['rbf']
 
-    'model__gnb__var_smoothing': [1.0e-9]
+  # Gaussian NB
+  'model__gnb__var_smoothing': [1.0e-9]
 
-    'model__dtree__max_depth': [10]
-    
-    'smote__k_neighbors': [3]
+  # Decision Tree
+  'model__dtree__max_depth': [10]
+  
+  # SMOTE
+  'smote__k_neighbors': [3]
