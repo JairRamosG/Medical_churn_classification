@@ -22,9 +22,12 @@ from sklearn.tree import DecisionTreeClassifier
 import joblib
 import json
 
-from src.utils import FeatureEngineering, SafeFrequencyEncoder
+from utils import FeatureEngineering, SafeFrequencyEncoder
 
 import argparse
+
+import sys
+
 
 def train_model(config_path):
     """
@@ -45,6 +48,8 @@ def train_model(config_path):
     METADATA_DIR = Path(os.getenv("METADATA_DIR", BASE_DIR / "metadata"))
     LOGS_DIR = Path(os.getenv("LOGS_DIR", BASE_DIR / "logs"))
 
+    sys.path.insert(0, str(BASE_DIR / "src"))
+
 
     MODEL_DIR.mkdir(parents=True, exist_ok= True)
     METADATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -52,10 +57,10 @@ def train_model(config_path):
 
     # Configurar el archivo para loggins
     logger = logging.getLogger(__name__)
-    logger.setLevel(logging.info)
+    logger.setLevel(logging.INFO)
 
     handler = logging.FileHandler(LOGS_DIR / config['log_file']) ## usar un nombre desde yaml
-    handler.setFormatter('%(asctime)s - %(levelname)s - %(message)s')
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logger.addHandler(handler)
 
     # Semillas
@@ -90,29 +95,17 @@ def train_model(config_path):
 
     logger.info(f"Todas las columnas requeridas están presentes")
 
-    # ------------------------------------------------------------------------------------
+    # Separar target y hacer splits
     target_variable = config['target_variable']
     X = data.drop(columns = [target_variable])
     y = data[target_variable]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed, stratify=y)
-
-    real_ordinal_cols = ['Referrals_Made']
-    real_nominal_cols = ['Billing_Issues', 'Portal_Usage'] 
-
-    # Numericas
-    numerical_cols = data.select_dtypes(include = ['int64', 'float64']).columns.tolist()
-    numerical_cols = [col for col in numerical_cols if col not in real_nominal_cols and col != 'PatientID']  
-
-    # Categoricas Ordinales 
-    ordinal_cols = real_ordinal_cols
-
-    # Categoricas Nominales
-    nominal_cols = [col for col in data.columns if col not in numerical_cols and col not in ordinal_cols and col != 'PatientID' and col != 'Last_Interaction_Date']
-
-
-
-
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, 
+        test_size=config.get('test_size', 0.2),
+        random_state=seed,
+        stratify=y)
+    logger.info("Datos divididos en train/test")
     pass
 
 if __name__ == "__main__":
