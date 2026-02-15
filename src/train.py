@@ -106,6 +106,23 @@ def train_model(config_path):
         random_state=seed,
         stratify=y)
     logger.info("Datos divididos en train/test")
+
+    # Identificación de columnas numéricas, ordinales y nominales
+    real_ordinal_cols = ['Referrals_Made']
+    real_nominal_cols = ['Billing_Issues', 'Portal_Usage'] 
+
+    ##Numericas
+    numerical_cols = data.select_dtypes(include = ['int64', 'float64']).columns.tolist()
+    numerical_cols = [col for col in numerical_cols if col not in real_nominal_cols and col != 'PatientID']  
+
+    ##Categoricas Ordinales 
+    ordinal_cols = real_ordinal_cols
+
+    ##Categoricas Nominales
+    nominal_cols = [col for col in data.columns if col not in numerical_cols and col not in ordinal_cols and col != 'PatientID' and col != 'Last_Interaction_Date']
+
+    logger.info(f"Columnas identificadas: numericas = {len(numerical_cols)} ordinales = {len(ordinal_cols)} nominales = {len(nominal_cols)}")
+
     pass
 
 if __name__ == "__main__":
