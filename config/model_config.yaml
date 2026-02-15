@@ -1,13 +1,19 @@
+# --- MEDICAL CHURN PREDICTION ---
 # config/model_config.yaml
-# Configuración para el modelo de Medical Churn Prediction
 
-# SEMILLAS Y PARÁMETROS BÁSICOS
-log_file: 'modelo_entrenamiento.log'
+# VARIABLE OBJETIVO
 target_variable: 'Churned'
 
+# NOMBRE LOGS
+log_file: 'modelo_entrenamiento.log'
+
+# SEMILLA
 seed: 42
-test_size: 0.2
-cv_splits: 3
+
+#VALIDACIÓN
+data_split:
+  test_size: 0.2
+  stratify: true
 
 
 # DEFINICIÓN DE COLUMNAS
@@ -43,41 +49,62 @@ columnas:
     - 'State'
     - 'Specialty'
 
-# BÚSQUEDA DE HIPERPARÁMETROS 
-param_grid:
-  # Blender
-  'model__final_estimator__penalty': ['elasticnet']
-  'model__final_estimator__l1_ratio': [0.2]
-  'model__final_estimator__solver': ['saga']
-
-  # Logistic Regression
-  'model__logistic__C': [0.01, 1]
-  'model__logistic__penalty': ['elasticnet']
-  'model__logistic__solver': ['saga']
-  'model__logistic__l1_ratio': [0.2]
+# PREPROCESAMIENTO PARA PIPELINES
+preprocessing:  
+  remainder: 'drop'
+  ordinal_categories: [[0, 1, 2, 3]]
   
-  # Random Forest
-  'model__rforest__n_estimators': [100, 200]
-  'model__rforest__max_depth': [10, 13]
-  'model__rforest__min_samples_split': [5, 10]
+  onehot_drop:  
+    drop: 'first'
+    handle_unknown: 'ignore'
   
-  # XGBoost
-  'model__xgboost__n_estimators': [100]
-  'model__xgboost__max_depth': [3, 5]
-  'model__xgboost__learning_rate': [0.01, 1]
-
-  # KNN
-  'model__knn__n_neighbors': [5, 7]
-
-  # SVC
-  'model__svc__C': [0.01, 1]
-  'model__svc__kernel': ['rbf']
-
-  # Gaussian NB
-  'model__gnb__var_smoothing': [1.0e-9]
-
-  # Decision Tree
-  'model__dtree__max_depth': [10]
+  onehot: 
+    handle_unknown: 'ignore'
   
-  # SMOTE
-  'smote__k_neighbors': [3]
+  frequency:
+    min_freq: 1
+    replace_with: 'other'
+
+# INGENIERIA DE CARACTERÍSTICAS
+feature_engineering:
+  create_interactions: false
+  scale_features: true
+  add_polynomial: false
+
+# BÚSQUEDA DE HIPERPARÁMETROS EN EL GRID PARA MODELOS
+models:
+  base_models:
+    logistic:
+      max_iter: 1000
+      C: 1.0
+    
+    random_forest: 
+      n_estimators: 100
+      max_depth: 10
+    
+    xgboost:  
+      max_depth: 6
+      learning_rate: 0.1
+    
+    knn:
+      n_neighbors: 5
+    
+    svc:
+      kernel: 'rbf'
+      C: 1.0
+      probability: true  # Importante para stacking
+    
+    naive_bayes:  
+      var_smoothing: 1e-9
+    
+    decision_tree: 
+      max_depth: 10
+  
+  blender:
+    max_iter: 1000
+    C: 1.0
+  
+  stacking:
+    cv: 5
+    stack_method: 'auto'
+    passthrough: false

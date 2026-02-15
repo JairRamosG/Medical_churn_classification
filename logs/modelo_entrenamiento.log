@@ -1,0 +1,12 @@
+2026-02-15 16:30:22,693 - INFO - Iniciando el entrenamiento del modelo
+2026-02-15 16:30:22,707 - INFO - Datos cargados correctamente desde /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/data/raw/patient_churn_dataset.csv
+2026-02-15 16:30:22,709 - INFO - Todas las columnas requeridas están presentes
+2026-02-15 16:30:22,718 - INFO - Datos divididos en train/test
+2026-02-15 16:30:22,718 - INFO - Columnas desde el archivo de configuración:
+2026-02-15 16:30:22,719 - INFO - Numéricas: 4
+2026-02-15 16:30:22,719 - INFO - Ordinales: 1
+2026-02-15 16:30:22,719 - INFO - Nominales OHE: 1
+2026-02-15 16:30:22,719 - INFO - Nominales OHE DROP: 3
+2026-02-15 16:30:22,719 - INFO - Nominales Frecuency: 2
+2026-02-15 16:30:22,719 - INFO - Ignoradas: 2
+2026-02-15 16:30:22,719 - INFO - Pipeline construido exitosamente

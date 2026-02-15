@@ -41,7 +41,7 @@ def build_preprocessor(columnas_config, preprocessor_config):
     ])
 
     ## Pipeline para datos nominales OHE
-    ohe_config = preprocessor_config.get('ohehot', {})
+    ohe_config = preprocessor_config.get('onehot', {})
     ohe_pipeline = Pipeline([
         ('nom_ohe', OneHotEncoder(handle_unknown=ohe_config.get('handle_unknown', 'ignore')))
     ])
@@ -77,11 +77,11 @@ def build_model(models_config, seed):
     base_models_config = models_config.get('base_models', {})
     base_models = [
     ('logistic', LogisticRegression(random_state=seed, 
-                                    **base_models.get('logistic', {'max_iter': 1000}))),
+                                    **base_models_config.get('logistic', {'max_iter': 1000}))),
     ('rforest', RandomForestClassifier(random_state=seed,
                                     **base_models_config.get('rforest', {}))),
     ('xgboost', XGBClassifier(random_state=seed,
-                              **base_models_config.get('xgboots', {}))),
+                              **base_models_config.get('xgboost', {}))),
     ('knn', KNeighborsClassifier(
         **base_models_config.get('knn', {})
     )),
@@ -104,32 +104,34 @@ def build_model(models_config, seed):
         **stacking_model_config)
 
 def build_full_pipeline(config, seed):
-     """
+    """
      Construye el pipeline completo usando todo el archivo de configuración.
      
      Args
         config (dict): Archivo de configuración completo de YAML    
         seed (int): Semilla aleatoria
-     """
+    """
 
     # Extraer las secciónes de la configuración
-    columnas_config = config.get('columnas', {})
-    preprocessor_config = config.get('peprocessing', {})
-    feature_engineering_config = config.get('feature_engineering', {})
-    smote_config = config.get('smote', {})
-    models_config = config.get('models', {})
+    try:    
+        columnas_config = config.get('columnas', {})
+        preprocessor_config = config.get('preprocessing', {})
+        feature_engineering_config = config.get('feature_engineering', {})
+        smote_config = config.get('smote', {})
+        models_config = config.get('models', {})
+    except Exception as e:
+        print(str(e))
+    
 
     # Construcción de los componentes    
-    preprocessor = build_preprocessor(columnas_config, build_preprocessor)
+    preprocessor = build_preprocessor(columnas_config, preprocessor_config)
     model = build_model(models_config, seed)
 
     pipeline = Pipeline([
     ('feature_engineering', FeatureEngineering()),
     ('preprocessor', preprocessor),
-    ('smote', SMOTE(**smote_config.get('smote', 'auto'))),
+    ('smote', SMOTE(**smote_config)),
     ('model', model)
     ])
     
     return pipeline
-
-
