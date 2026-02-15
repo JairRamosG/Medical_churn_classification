@@ -23,6 +23,7 @@ import joblib
 import json
 
 from utils import FeatureEngineering, SafeFrequencyEncoder
+from pipelines import build_full_pipeline
 
 import argparse
 
@@ -142,9 +143,12 @@ def train_model(config_path):
     logger.info(f"Nominales Frecuency: {len(freq_cols)}")
     logger.info(f"Ignoradas: {len(ignored_cols)}")
     
-    # CONSTRUIR EL PREPROCESSOR CON COLUMNTRANSFORMER
-    pipeline = build_full_pipeline(numerical_cols, ordinal_cols, nominal_ohe_drop_cols, nominal_ohe_cols, freq_cols)
-    logger.info('sigue parametrizar una función para el pipeline')
+    # CONSTRUIR EL PIPELINE COMPLETO
+    try:
+        pipeline = build_full_pipeline(config, seed)
+        logger.info('Pipeline construido exitosamente')
+    except Exception as e:
+        logger.error(f'Error construyendo el pipeline: {str(e)}')
 
     pass
 

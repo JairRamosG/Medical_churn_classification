@@ -13,24 +13,41 @@ from sklearn.tree import DecisionTreeClassifier
 
 from utils import FeatureEngineering, SafeFrequencyEncoder
 
-def build_preprocessor(numerical_cols, ordinal_cols, nominal_ohe_drop_cols, nominal_ohe_cols, freq_cols):
-    """Construye el ColumnTransformer con pipelines para cada tipo de dato."""
+def build_preprocessor(columnas_config, preprocessor_config):
+    """
+    Construye el ColumnTransformer con con el archivo de configuración
+    Args:
+        columnas_config (dict): Diccionario de la lista de columnas
+        preprocessor_config (dict): Configuración del preprocessador
+    """
     
+    # Extraer las columnas
+    ordinal_cols = columnas_config.get('ordinales', [])
+    nominal_ohe_drop_cols = columnas_config.get('nominales_ohe_drop', [])
+    nominal_ohe_cols = columnas_config.get('nominales_ohe', [])
+    freq_cols = columnas_config.get('nominales_frecuencia', [])
+
     ## Pipeline para datos ordinales
-    ordinal_categories = [[0, 1, 2, 3]]
+    ordinal_categories = preprocessor_config.get('ordinal_categories', [[0, 1, 2, 3]])
     ord_pipeline = Pipeline([
         ('ord_encoder', OrdinalEncoder(categories=ordinal_categories))
     ])
 
-    ## Pipeline para datos nominales
+    ## Pipeline para datos nominales OHE con drop
+    ohe_drop_config = preprocessor_config.get('onehot_drop', {})
     ohe_drop_pipeline = Pipeline([
-        ('nom_ohe_dropfirst', OneHotEncoder(drop = 'first', handle_unknown='ignore'))
+        ('nom_ohe_dropfirst', OneHotEncoder(drop = ohe_drop_config.get('drop', 'first'),
+                                             handle_unknown= ohe_drop_config.get('handle_unknown', 'ignore')))
     ])
 
+    ## Pipeline para datos nominales OHE
+    ohe_config = preprocessor_config.get('ohehot', {})
     ohe_pipeline = Pipeline([
-        ('nom_ohe', OneHotEncoder(handle_unknown='ignore'))
+        ('nom_ohe', OneHotEncoder(handle_unknown=ohe_config.get('handle_unknown', 'ignore')))
     ])
 
+    ## Pipeline para los nominales con Frecuency
+    #freq_config = preprocessor_config.get('frequency', {})
     frecuency_pipeline = Pipeline([
         ('nom_frec', SafeFrequencyEncoder())
     ])
@@ -39,46 +56,80 @@ def build_preprocessor(numerical_cols, ordinal_cols, nominal_ohe_drop_cols, nomi
     preprocesor = ColumnTransformer(
         transformers = [
             ('ord_encoder', ord_pipeline, ordinal_cols),
-            ('nom_ohe_dropfirst', ohe_drop_pipeline, ['Gender', 'Billing_Issues', 'Portal_Usage']),
-            ('nom_ohe', ohe_pipeline, ['Insurance_Type'] ),
-            ('nom_frec', frecuency_pipeline, ['State', 'Specialty']) 
+            ('nom_ohe_dropfirst', ohe_drop_pipeline, nominal_ohe_drop_cols),
+            ('nom_ohe', ohe_pipeline, nominal_ohe_cols ),
+            ('nom_frec', frecuency_pipeline, freq_cols) 
         ],
-        remainder='drop'
+        remainder= preprocessor_config.get('remainder', 'drop')
     )
 
     return preprocesor
 
-def build_model(seed):
-    """Construye el modelo de stacking."""
+def build_model(models_config, seed):
+    """
+    Construye el modelo de stacking con el archivo de configuración
+    Args:
+        models_config (dict): Configuración de los modelos utilizados
+        seed (int): Semilla aleatoria
 
+    """
+
+    base_models_config = models_config.get('base_models', {})
     base_models = [
-    ('logistic', LogisticRegression(random_state=seed, max_iter=1000)),
-    ('rforest', RandomForestClassifier(random_state=seed)),
-    ('xgboost', XGBClassifier(random_state=seed, use_label_encoder=False, eval_metric='logloss')),
-    ('knn', KNeighborsClassifier()),
-    ('svc', SVC(random_state = seed)),
-    ('gnb', GaussianNB()),
-    ('dtree', DecisionTreeClassifier(random_state=seed))
+    ('logistic', LogisticRegression(random_state=seed, 
+                                    **base_models.get('logistic', {'max_iter': 1000}))),
+    ('rforest', RandomForestClassifier(random_state=seed,
+                                    **base_models_config.get('rforest', {}))),
+    ('xgboost', XGBClassifier(random_state=seed,
+                              **base_models_config.get('xgboots', {}))),
+    ('knn', KNeighborsClassifier(
+        **base_models_config.get('knn', {})
+    )),
+    ('svc', SVC(random_state = seed, 
+                **base_models_config.get('svc', {}))),
+    ('gnb', GaussianNB(
+        **base_models_config.get('gnb', {})
+    )),
+    ('dtree', DecisionTreeClassifier(random_state=seed,
+                                     ** base_models_config.get('dtree', {})))
     ]
-    blender = LogisticRegression(random_state = seed)
 
+    blender_model_config = models_config.get('blender', {})
+    blender = LogisticRegression(random_state = seed, **blender_model_config)
+
+    stacking_model_config = models_config.get('stacking', {})
     return StackingClassifier(
         estimators=base_models,
-        final_estimator=blender)
+        final_estimator=blender,
+        **stacking_model_config)
 
-def build_full_pipeline(numerical_cols, ordinal_cols, nominal_ohe_drop_cols, nominal_ohe_cols, freq_cols, seed):
-     """Construye el pipeline completo: FE + Preprocessor + SMOTE + Modelo."""
-    
-    preprocessor = build_preprocessor(numerical_cols, ordinal_cols, nominal_ohe_drop_cols, nominal_ohe_cols, freq_cols)
-    model = build_model(seed)
+def build_full_pipeline(config, seed):
+     """
+     Construye el pipeline completo usando todo el archivo de configuración.
+     
+     Args
+        config (dict): Archivo de configuración completo de YAML    
+        seed (int): Semilla aleatoria
+     """
+
+    # Extraer las secciónes de la configuración
+    columnas_config = config.get('columnas', {})
+    preprocessor_config = config.get('peprocessing', {})
+    feature_engineering_config = config.get('feature_engineering', {})
+    smote_config = config.get('smote', {})
+    models_config = config.get('models', {})
+
+    # Construcción de los componentes    
+    preprocessor = build_preprocessor(columnas_config, build_preprocessor)
+    model = build_model(models_config, seed)
 
     pipeline = Pipeline([
     ('feature_engineering', FeatureEngineering()),
     ('preprocessor', preprocessor),
-    ('smote', SMOTE(sampling_strategy='auto', random_state=seed)),
+    ('smote', SMOTE(**smote_config.get('smote', 'auto'))),
     ('model', model)
-])
-    pass
+    ])
+    
+    return pipeline
 
 
-## Creo que tengo que hardcodear los parametros desde el archivo de config
