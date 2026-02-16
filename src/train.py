@@ -198,9 +198,21 @@ def train_model(config_path):
         for param, value in grid.best_params_.items():
             logger.info(f'          {param}: {value}')            
         logger.info(f'Mejor score:  {np.round(grid.best_score_, 4)}')
+        best_model = grid.best_estimator_
+        logger.info('Mejor modelo obtenido del Grid Search')
     except Exception as e:
         logger.error(f'Error en los resultados del grid: {str(e)}')
-    
+        raise
+
+    # EVALUACIÓN DEL MODELO
+    try:
+        y_pred = best_model.predict(X_test)
+        if hasattr(best_model, 'predict_proba'):
+            y_proba = best_model.predict_proba(X_test)[:, 1]
+            logger.info('Probabilidades obtenidas correctamente')
+    except Exception as e:
+        logger.error(f'Falla en la evaluacion del modelo {str(e)}')
+            
     pass
 
 if __name__ == "__main__":
