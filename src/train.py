@@ -59,16 +59,14 @@ def train_model(config_path):
     MODEL_DIR = Path(os.getenv("MODEL_DIR", BASE_DIR / "models"))
     METADATA_DIR = Path(os.getenv("METADATA_DIR", BASE_DIR / "metadata"))
     LOGS_DIR = Path(os.getenv("LOGS_DIR", BASE_DIR / "logs"))
-    IMG_DIR = Path(os.getenv("IMG_DIR", BASE_DIR / "metadata" / "matrices"))
-    RES_DIR = Path(os.getenv("RES_DIR", BASE_DIR / "metadata" / "resultados"))
 
     sys.path.insert(0, str(BASE_DIR / "src"))
 
     MODEL_DIR.mkdir(parents=True, exist_ok= True)
     METADATA_DIR.mkdir(parents=True, exist_ok=True)
     LOGS_DIR.mkdir(parents=True, exist_ok= True)
-    IMG_DIR.mkdir(parents=True, exist_ok= True)
-    RES_DIR.mkdir(parents=True, exist_ok=True)
+    #IMG_DIR.mkdir(parents=True, exist_ok= True)
+    #RES_DIR.mkdir(parents=True, exist_ok=True)
 
     # CONFIGURAR EL ARCHIVO PARA LOS LOGGINS
     logger = logging.getLogger(__name__)
@@ -218,19 +216,21 @@ def train_model(config_path):
     
     # REGISTRAR LA MATRIZ
     try:
-        ruta_img = IMG_DIR + str(config['log_file'])
+        ruta_img = str(METADATA_DIR) + "/" + config['experiment_name'] + '_matriz' + '.png'
         save_confusion_matrix(y_test, y_pred, ruta_img)
         logger.info('Matriz de confusión guardada exitosamente')
     except Exception as e:
         logger.error(f'Falla en el registro de la matriz {str(e)}')
+        raise
 
     # REGISTRAR LAS MEDIDAS
     try:
-        ruta_medidas = RES_DIR + str(config['log_file'])
-        save_confusion_matrix(y_test, y_pred, ruta_medidas)
+        ruta_medidas = str(METADATA_DIR) + "/" + config['experiment_name'] + '_medidas' + '.csv'
+        save_medidas_biclase(y_test, y_pred, ruta_img)
         logger.info('Medidas de desempeño guardadas exitosamente')
     except Exception as e:
         logger.error(f'Falla en el registro de las medidas de desempeño{str(e)}')
+        raise
 
     pass
 

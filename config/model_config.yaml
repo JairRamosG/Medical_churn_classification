@@ -1,6 +1,9 @@
 # --- MEDICAL CHURN PREDICTION ---
 # config/model_config.yaml
 
+# NOMBRE EXPERIMENTO
+experiment_name: 'EXP_01'
+
 # VARIABLE OBJETIVO
 target_variable: 'Churned'
 

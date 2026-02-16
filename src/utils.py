@@ -87,7 +87,7 @@ def save_confusion_matrix(y_test, y_pred, ruta_img):
     plt.tight_layout()
     plt.savefig(ruta_img)
 
-def save_medidas_biclase(y_test, y_pred, ruta_resultados):
+def save_medidas_biclase(y_test, y_pred, ruta_medidas):
     '''
     Calculas las medidas de desempeño solicitadas en las instrucciones
     regresa una tabla con las medidas
@@ -109,4 +109,4 @@ def save_medidas_biclase(y_test, y_pred, ruta_resultados):
     }
 
     resultados =  pd.DataFrame(list(metrics.items()), columns = ['Medida', 'Valor'])
-    resultados.to_csv(ruta_resultados)
+    resultados.to_csv(ruta_medidas)
