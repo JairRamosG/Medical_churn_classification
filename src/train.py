@@ -82,7 +82,8 @@ def train_model(config_path):
     np.random.seed(seed)
 
     # CARGAR LOS DATOS PARA TRABAJAR
-    logger.info("Iniciando el entrenamiento del modelo")
+    logger.info('=='*50)
+    logger.info(f"Iniciando el entrenamiento del modelo {str(config['experiment_name'])}")
     if not DATA_FILE.exists():
         logger.error(f"Archivo de datos no encontrado en: {DATA_FILE}")
         raise FileNotFoundError(f'No existe: {DATA_FILE}')
@@ -213,6 +214,7 @@ def train_model(config_path):
             logger.info('Probabilidades obtenidas correctamente')        
     except Exception as e:
         logger.error(f'Falla en la evaluacion del modelo {str(e)}')
+        raise
     
     # REGISTRAR LA MATRIZ
     try:
@@ -226,12 +228,37 @@ def train_model(config_path):
     # REGISTRAR LAS MEDIDAS
     try:
         ruta_medidas = str(METADATA_DIR) + "/" + config['experiment_name'] + '_medidas' + '.csv'
-        save_medidas_biclase(y_test, y_pred, ruta_img)
+        medidas = save_medidas_biclase(y_test, y_pred, ruta_medidas)
         logger.info('Medidas de desempeño guardadas exitosamente')
     except Exception as e:
         logger.error(f'Falla en el registro de las medidas de desempeño{str(e)}')
         raise
 
+    # REGISTRAR LOS METADATOS EN UN JSON
+    try:
+        ruta_metadatos = str(METADATA_DIR) + "/" + config['experiment_name'] + '.json'
+        metadata = {
+        "best_params": grid.best_params_,
+        "best_score": grid.best_score_,
+        "scoring": medidas}
+        with open(ruta_metadatos, 'w') as f:
+            json.dump(metadata, f, indent = 4)
+            logger.info('Metadatos registrados correctamente')
+    except Exception as e:
+        logger.error(f'Error durante el registro de los metadatos: {str(e)}')
+        raise
+
+    # REGISTRAR EL MODELO
+    try:
+        ruta_modelo = str(MODEL_DIR) + "/" + config['experiment_name'] + '.pkl'
+        joblib.dump(best_model, str(ruta_modelo))
+        logger.info(f"Modelo {str(config['experiment_name'])} guardado exitosamente")
+    except Exception as e:
+        logger.error(f'Falla guardando el modelo: {str(e)}')
+        raise
+    
+    logger.info('Final del entrenamiento')
+    logger.info('=='*50)
     pass
 
 if __name__ == "__main__":

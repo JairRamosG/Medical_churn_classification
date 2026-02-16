@@ -98,15 +98,17 @@ def save_medidas_biclase(y_test, y_pred, ruta_medidas):
 
     metrics = {
 
-        'Accuracy': accuracy_score(y_test, y_pred),
-        'Error Rate': 1 - accuracy_score(y_test, y_pred),
-        'Recall (Sensitivity)': recall_score(y_test, y_pred),
-        'Specificity': specificity,
-        'Balanced Accuracy': balanced_accuracy_score(y_test, y_pred),
-        'Precision': precision_score(y_test, y_pred),
-        'F1 Score': f1_score(y_test, y_pred),
-        'MCC': matthews_corrcoef(y_test, y_pred)
+        'Accuracy': np.round(accuracy_score(y_test, y_pred), 4),
+        'Error Rate': np.round(1 - accuracy_score(y_test, y_pred), 4),
+        'Recall (Sensitivity)': np.round(recall_score(y_test, y_pred), 4),
+        'Specificity': np.round(specificity, 4),
+        'Balanced Accuracy': np.round(balanced_accuracy_score(y_test, y_pred), 4),
+        'Precision': np.round(precision_score(y_test, y_pred), 4),
+        'F1 Score': np.round(f1_score(y_test, y_pred), 4),
+        'MCC': np.round(matthews_corrcoef(y_test, y_pred), 4)
     }
 
-    resultados =  pd.DataFrame(list(metrics.items()), columns = ['Medida', 'Valor'])
+    #resultados =  pd.DataFrame(list(metrics.items()), columns = ['Medida', 'Valor'])
+    resultados = pd.DataFrame(metrics.items(), columns = ['Medida', 'Valor'])
     resultados.to_csv(ruta_medidas)
+    return resultados
