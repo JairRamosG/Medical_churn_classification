@@ -1,12 +1,55 @@
-2026-02-15 16:30:22,693 - INFO - Iniciando el entrenamiento del modelo
-2026-02-15 16:30:22,707 - INFO - Datos cargados correctamente desde /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/data/raw/patient_churn_dataset.csv
-2026-02-15 16:30:22,709 - INFO - Todas las columnas requeridas están presentes
-2026-02-15 16:30:22,718 - INFO - Datos divididos en train/test
-2026-02-15 16:30:22,718 - INFO - Columnas desde el archivo de configuración:
-2026-02-15 16:30:22,719 - INFO - Numéricas: 4
-2026-02-15 16:30:22,719 - INFO - Ordinales: 1
-2026-02-15 16:30:22,719 - INFO - Nominales OHE: 1
-2026-02-15 16:30:22,719 - INFO - Nominales OHE DROP: 3
-2026-02-15 16:30:22,719 - INFO - Nominales Frecuency: 2
-2026-02-15 16:30:22,719 - INFO - Ignoradas: 2
-2026-02-15 16:30:22,719 - INFO - Pipeline construido exitosamente
+2026-02-15 18:40:29,913 - INFO - Iniciando el entrenamiento del modelo
+2026-02-15 18:40:29,923 - INFO - Datos cargados correctamente desde /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/data/raw/patient_churn_dataset.csv
+2026-02-15 18:40:29,923 - INFO - Todas las columnas requeridas están presentes
+2026-02-15 18:40:29,928 - INFO - Datos divididos en train/test
+2026-02-15 18:40:29,929 - INFO - Columnas desde el archivo de configuración:
+2026-02-15 18:40:29,929 - INFO - Numéricas: 4
+2026-02-15 18:40:29,929 - INFO - Ordinales: 1
+2026-02-15 18:40:29,929 - INFO - Nominales OHE: 1
+2026-02-15 18:40:29,929 - INFO - Nominales OHE DROP: 3
+2026-02-15 18:40:29,929 - INFO - Nominales Frecuency: 2
+2026-02-15 18:40:29,929 - INFO - Ignoradas: 2
+2026-02-15 18:40:29,929 - INFO - Pipeline construido exitosamente
+2026-02-15 18:40:29,929 - INFO - Pasos del pipeline ['feature_engineering', 'preprocessor', 'smote', 'model']
+2026-02-15 18:40:29,929 - INFO - Configuración del Grid Search
+2026-02-15 18:40:29,929 - INFO - Scoring  : matthews_corrcoef
+2026-02-15 18:40:29,929 - INFO - n_splits : 3
+2026-02-15 18:40:29,929 - INFO - n_jobs   : -1
+2026-02-15 18:40:29,930 - INFO - Inicio del entrenamiento
+2026-02-15 18:40:40,243 - INFO - Modelo entrenado en 0:00:10.313681
+2026-02-15 18:40:40,243 - INFO - Mejores parámetros:
+2026-02-15 18:40:40,243 - INFO -           model__dtree__criterion: gini
+2026-02-15 18:40:40,244 - INFO -           model__dtree__max_depth: 3
+2026-02-15 18:40:40,244 - INFO -           model__dtree__min_samples_leaf: 2
+2026-02-15 18:40:40,244 - INFO -           model__dtree__min_samples_split: 2
+2026-02-15 18:40:40,244 - INFO -           model__final_estimator__C: 1.0
+2026-02-15 18:40:40,244 - INFO -           model__final_estimator__max_iter: 500
+2026-02-15 18:40:40,244 - INFO -           model__final_estimator__penalty: l2
+2026-02-15 18:40:40,244 - INFO -           model__final_estimator__solver: lbfgs
+2026-02-15 18:40:40,244 - INFO -           model__gnb__var_smoothing: 0.001
+2026-02-15 18:40:40,244 - INFO -           model__knn__algorithm: auto
+2026-02-15 18:40:40,244 - INFO -           model__knn__n_neighbors: 3
+2026-02-15 18:40:40,244 - INFO -           model__knn__p: 1
+2026-02-15 18:40:40,244 - INFO -           model__knn__weights: distance
+2026-02-15 18:40:40,244 - INFO -           model__logistic__C: 0.1
+2026-02-15 18:40:40,244 - INFO -           model__logistic__max_iter: 500
+2026-02-15 18:40:40,244 - INFO -           model__logistic__penalty: l2
+2026-02-15 18:40:40,244 - INFO -           model__logistic__solver: lbfgs
+2026-02-15 18:40:40,244 - INFO -           model__rforest__max_depth: 5
+2026-02-15 18:40:40,244 - INFO -           model__rforest__max_features: sqrt
+2026-02-15 18:40:40,244 - INFO -           model__rforest__min_samples_leaf: 2
+2026-02-15 18:40:40,244 - INFO -           model__rforest__min_samples_split: 2
+2026-02-15 18:40:40,244 - INFO -           model__rforest__n_estimators: 50
+2026-02-15 18:40:40,244 - INFO -           model__svc__C: 1.0
+2026-02-15 18:40:40,244 - INFO -           model__svc__gamma: auto
+2026-02-15 18:40:40,244 - INFO -           model__svc__kernel: rbf
+2026-02-15 18:40:40,244 - INFO -           model__xgboost__colsample_bytree: 0.8
+2026-02-15 18:40:40,245 - INFO -           model__xgboost__gamma: 0.1
+2026-02-15 18:40:40,245 - INFO -           model__xgboost__learning_rate: 0.01
+2026-02-15 18:40:40,245 - INFO -           model__xgboost__max_depth: 3
+2026-02-15 18:40:40,245 - INFO -           model__xgboost__min_child_weight: 1
+2026-02-15 18:40:40,245 - INFO -           model__xgboost__n_estimators: 50
+2026-02-15 18:40:40,245 - INFO -           model__xgboost__subsample: 0.8
+2026-02-15 18:40:40,245 - INFO -           smote__k_neighbors: 3
+2026-02-15 18:40:40,245 - INFO -           smote__sampling_strategy: auto
+2026-02-15 18:40:40,245 - INFO - Mejor score:  -0.0017

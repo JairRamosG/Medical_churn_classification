@@ -15,6 +15,13 @@ data_split:
   test_size: 0.2
   stratify: true
 
+# RUTAS
+paths:
+  data_file: "data/raw/patient_churn_dataset.csv"
+  models_dir: "models/trained_models"
+  metadata_dir: "metadata"
+  logs_dir: "logs"
+  model_filename: "churn_model_seed{seed}_acc{test_score}_{timestamp}.pkl"
 
 # DEFINICIÓN DE COLUMNAS
 columnas:
@@ -65,44 +72,126 @@ preprocessing:
     min_freq: 1
     replace_with: 'other'
 
-# INGENIERIA DE CARACTERÍSTICAS
-feature_engineering:
-  create_interactions: false
-  scale_features: true
-  add_polynomial: false
+# SMOTE (Oversampling)
+smote:
+  sampling_strategy: 'auto'
+  k_neighbors: 5
+  random_state: 42
 
-# BÚSQUEDA DE HIPERPARÁMETROS EN EL GRID PARA MODELOS
+# BÚSQUEDA DE HIPERPARÁMETROS EN EL GRID
+grid_search:
+  scoring: 'matthews_corrcoef'  # Métrica a optimizar
+  cv_folds: 3                    # Número de folds para validación cruzada
+  n_jobs: -1                     # Usar todos los núcleos
+  verbose: 1                     # Nivel de verbose (0,1,2)
+  error_score: 'raise'           # Comportamiento en error
+  shuffle: true                   # Mezclar datos en CV
+  
+  param_grid:    
+    # SMOTE
+    'smote__k_neighbors': [3]
+    'smote__sampling_strategy': ['auto']
+    
+    # RANDOM FOREST (rforest)
+    'model__rforest__n_estimators': [50]
+    'model__rforest__max_depth': [5]
+    'model__rforest__min_samples_split': [2]
+    'model__rforest__min_samples_leaf': [2]
+    'model__rforest__max_features': ['sqrt']
+    
+    # XGBOOST
+    'model__xgboost__n_estimators': [50]
+    'model__xgboost__max_depth': [3]
+    'model__xgboost__learning_rate': [0.01]
+    'model__xgboost__subsample': [0.8]
+    'model__xgboost__colsample_bytree': [0.8]
+    'model__xgboost__min_child_weight': [1]
+    'model__xgboost__gamma': [0.1]
+    
+    # LOGISTIC REGRESSION (modelo base)
+    'model__logistic__C': [0.1]
+    'model__logistic__penalty': ['l2']
+    'model__logistic__solver': ['lbfgs']
+    'model__logistic__max_iter': [500]
+    
+    # KNN
+    'model__knn__n_neighbors': [3]
+    'model__knn__weights': ['distance']
+    'model__knn__algorithm': ['auto']
+    'model__knn__p': [1] 
+    
+    # SVC
+    'model__svc__C': [1.0]
+    'model__svc__kernel': ['rbf']
+    'model__svc__gamma': ['auto']
+    
+    # NAIVE BAYES
+    'model__gnb__var_smoothing': [0.001]
+    
+    # DECISION TREE
+    'model__dtree__max_depth': [3, ]
+    'model__dtree__min_samples_split': [2]
+    'model__dtree__min_samples_leaf': [2]
+    'model__dtree__criterion': ['gini']
+    
+    # BLENDER 
+    'model__final_estimator__C': [1.0]
+    'model__final_estimator__penalty': ['l2']
+    'model__final_estimator__solver': ['lbfgs',]
+    'model__final_estimator__max_iter': [500]
+
+# MODELOS BASE (valores por defecto)
 models:
   base_models:
     logistic:
       max_iter: 1000
       C: 1.0
+      penalty: 'l2'
+      solver: 'lbfgs'
     
     random_forest: 
       n_estimators: 100
       max_depth: 10
+      min_samples_split: 2
+      min_samples_leaf: 1
+      max_features: 'sqrt'
     
     xgboost:  
+      n_estimators: 100
       max_depth: 6
       learning_rate: 0.1
+      subsample: 1.0
+      colsample_bytree: 1.0
+      min_child_weight: 1
+      gamma: 0
     
     knn:
       n_neighbors: 5
+      weights: 'uniform'
+      algorithm: 'auto'
+      p: 2
     
     svc:
       kernel: 'rbf'
       C: 1.0
-      probability: true  # Importante para stacking
+      gamma: 'scale'
+      probability: true
+      degree: 3
     
     naive_bayes:  
       var_smoothing: 1e-9
     
     decision_tree: 
       max_depth: 10
+      min_samples_split: 2
+      min_samples_leaf: 1
+      criterion: 'gini'
   
   blender:
     max_iter: 1000
     C: 1.0
+    penalty: 'l2'
+    solver: 'lbfgs'
   
   stacking:
     cv: 5

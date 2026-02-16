@@ -5,6 +5,7 @@ import logging
 import pandas as pd
 import numpy as np
 import random
+from datetime import datetime
 
 from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold
 from sklearn.compose import ColumnTransformer
@@ -147,9 +148,59 @@ def train_model(config_path):
     try:
         pipeline = build_full_pipeline(config, seed)
         logger.info('Pipeline construido exitosamente')
+        logger.info(f'Pasos del pipeline {list(pipeline.named_steps.keys())}')
     except Exception as e:
         logger.error(f'Error construyendo el pipeline: {str(e)}')
+        raise
 
+    # OBTENER LA COFIGURACIÓN DEL GRID SEARCH CON EL ARCHIVO DE CONFIGURACIÓN
+    grid_config = config.get('grid_search', {})
+
+    param_grid = grid_config.get('param_grid', {})
+    scoring = grid_config.get('scoring', 'matthews_corrcoef')
+    error_score = grid_config.get('error_score', 'raise')
+    n_splits = grid_config.get('cv_folds', 3)
+    shuffle = grid_config.get('shuffle', True)
+    n_jobs = grid_config.get('n_jobs', -1)
+    verbose = grid_config.get('verbose', 0)
+
+    logger.info('Configuración del Grid Search')
+    logger.info(f'Scoring  : {scoring}')
+    logger.info(f'n_splits : {n_splits}')
+    logger.info(f'n_jobs   : {n_jobs}')
+
+    cv = StratifiedKFold(n_splits=n_splits, shuffle=shuffle, random_state=seed)
+
+    grid = GridSearchCV(
+    estimator=pipeline,
+    param_grid=param_grid,
+    scoring=scoring,
+    error_score=error_score,
+    cv=cv,
+    n_jobs=n_jobs,
+    verbose=verbose)
+
+
+    # FASE DEL ENTRENAMIENTO
+    start_time = datetime.now()
+    try:
+        logger.info('Inicio del entrenamiento')
+        grid.fit(X_train, y_train)
+        total_time = datetime.now() - start_time
+        logger.info(f'Modelo entrenado en {total_time}')
+    except Exception as e:
+        logger.error(f'Error en el entrenamiento: {str(e)}')
+        raise
+
+    # RESULTADOS DEL GRID SEARCH
+    try:
+        logger.info(f'Mejores parámetros:')
+        for param, value in grid.best_params_.items():
+            logger.info(f'          {param}: {value}')            
+        logger.info(f'Mejor score:  {np.round(grid.best_score_, 4)}')
+    except Exception as e:
+        logger.error(f'Error en los resultados del grid: {str(e)}')
+    
     pass
 
 if __name__ == "__main__":

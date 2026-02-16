@@ -128,7 +128,7 @@ def build_full_pipeline(config, seed):
     model = build_model(models_config, seed)
 
     pipeline = Pipeline([
-    ('feature_engineering', FeatureEngineering()),
+    ('feature_engineering', FeatureEngineering(**feature_engineering_config)),
     ('preprocessor', preprocessor),
     ('smote', SMOTE(**smote_config)),
     ('model', model)
