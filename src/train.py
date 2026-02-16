@@ -23,7 +23,7 @@ from sklearn.tree import DecisionTreeClassifier
 import joblib
 import json
 
-from utils import FeatureEngineering, SafeFrequencyEncoder
+from utils import FeatureEngineering, SafeFrequencyEncoder, save_confusion_matrix, save_medidas_biclase
 from pipelines import build_full_pipeline
 
 import argparse
@@ -59,13 +59,16 @@ def train_model(config_path):
     MODEL_DIR = Path(os.getenv("MODEL_DIR", BASE_DIR / "models"))
     METADATA_DIR = Path(os.getenv("METADATA_DIR", BASE_DIR / "metadata"))
     LOGS_DIR = Path(os.getenv("LOGS_DIR", BASE_DIR / "logs"))
+    IMG_DIR = Path(os.getenv("IMG_DIR", BASE_DIR / "metadata" / "matrices"))
+    RES_DIR = Path(os.getenv("RES_DIR", BASE_DIR / "metadata" / "resultados"))
 
     sys.path.insert(0, str(BASE_DIR / "src"))
-
 
     MODEL_DIR.mkdir(parents=True, exist_ok= True)
     METADATA_DIR.mkdir(parents=True, exist_ok=True)
     LOGS_DIR.mkdir(parents=True, exist_ok= True)
+    IMG_DIR.mkdir(parents=True, exist_ok= True)
+    RES_DIR.mkdir(parents=True, exist_ok=True)
 
     # CONFIGURAR EL ARCHIVO PARA LOS LOGGINS
     logger = logging.getLogger(__name__)
@@ -98,7 +101,7 @@ def train_model(config_path):
         [config['target_variable']] + 
         IGNORAR_COLS + 
         NUMERICAS_DEFINIDAS + 
-        ORDINALES_DEFINIDAS + 
+        ORDINALES_DEFINIDAS +  
         NOM_OHE_DROP_DEFINIDAS + 
         NOM_OHE_DEFINIDAS + 
         NOM_FREQ_DEFINIDAS
@@ -209,10 +212,26 @@ def train_model(config_path):
         y_pred = best_model.predict(X_test)
         if hasattr(best_model, 'predict_proba'):
             y_proba = best_model.predict_proba(X_test)[:, 1]
-            logger.info('Probabilidades obtenidas correctamente')
+            logger.info('Probabilidades obtenidas correctamente')        
     except Exception as e:
         logger.error(f'Falla en la evaluacion del modelo {str(e)}')
-            
+    
+    # REGISTRAR LA MATRIZ
+    try:
+        ruta_img = IMG_DIR + str(config['log_file'])
+        save_confusion_matrix(y_test, y_pred, ruta_img)
+        logger.info('Matriz de confusión guardada exitosamente')
+    except Exception as e:
+        logger.error(f'Falla en el registro de la matriz {str(e)}')
+
+    # REGISTRAR LAS MEDIDAS
+    try:
+        ruta_medidas = RES_DIR + str(config['log_file'])
+        save_confusion_matrix(y_test, y_pred, ruta_medidas)
+        logger.info('Medidas de desempeño guardadas exitosamente')
+    except Exception as e:
+        logger.error(f'Falla en el registro de las medidas de desempeño{str(e)}')
+
     pass
 
 if __name__ == "__main__":

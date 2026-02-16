@@ -5,7 +5,7 @@
 target_variable: 'Churned'
 
 # NOMBRE LOGS
-log_file: 'modelo_entrenamiento.log'
+log_file: '01_modelo_entrenamiento.log'
 
 # SEMILLA
 seed: 42
@@ -129,7 +129,7 @@ grid_search:
     'model__gnb__var_smoothing': [0.001]
     
     # DECISION TREE
-    'model__dtree__max_depth': [3, ]
+    'model__dtree__max_depth': [3]
     'model__dtree__min_samples_split': [2]
     'model__dtree__min_samples_leaf': [2]
     'model__dtree__criterion': ['gini']
