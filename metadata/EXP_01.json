@@ -36,5 +36,4 @@
         "smote__sampling_strategy": "auto"
     },
     "best_score": -0.0016821581145506452,
-    "scoring": null
-}
+    "scoring": 
