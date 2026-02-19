@@ -43,5 +43,35 @@ def predecir_churn(modelo, datos, umbral = 0.5):
     
     return pred, probabilidad, pred_prob_base
 
+###########################################################################################################
+# Intergaz con Streamlit
+###########################################################################################################
 
+st.title('Churn para clientes en el sector medico')
 
+c1, c2 = st.columns([4, 2])
+
+with c1:
+    st.header('Ingrese los datos del cliente')
+    cols = st.columns(2)
+    with cols[0]:
+        # Age	                     - numerico
+        # Gender	                 - Binario
+        # State	                     - opcion desplegable
+        # Tenure_Months	             - numérico
+        # Specialty	                 - opcion desplegable
+        # Insurance_Type             - opción desplegable	
+        # Visits_Last_Year	         - numérico
+        # Missed_Appointments	     - numérico
+        # Days_Since_Last_Visit	     - numérico
+        # Last_Interaction_Date      - fecha
+        # Overall_Satisfaction	     - ranking float
+        # Wait_Time_Satisfaction     - ranking float
+        # Staff_Satisfaction	     - ranking float
+        # Provider_Rating	         - ranking float
+        # Avg_Out_Of_Pocket_Cost     - numérico
+        # Billing_Issues	         - numérico
+        # Portal_Usage	             - numérico
+        # Referrals_Made             - numérico
+        # Distance_To_Facility_Miles - numperico flotante
+ 
