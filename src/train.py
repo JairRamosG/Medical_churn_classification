@@ -240,7 +240,7 @@ def train_model(config_path):
         metadata = {
         "best_params": grid.best_params_,
         "best_score": grid.best_score_,
-        "scoring": medidas}
+        "scoring": medidas.to_dict()}
         with open(ruta_metadatos, 'w') as f:
             json.dump(metadata, f, indent = 4)
             logger.info('Metadatos registrados correctamente')

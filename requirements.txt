@@ -1,10 +1,27 @@
-streamlit==1.28.1
-pandas==2.2.3
-numpy==1.24.3
-scikit-learn==1.6.1
-imbalanced-learn==0.11.0
-xgboost==1.7.6
-joblib==1.3.2
-matplotlib==3.7.2
-seaborn==0.12.2
-PyYAML==6.0.1
+"print('VERSIONES EXACTAS DEL ENTORNO')
+print('='*60)
+print(f'Python: {sys.version}')
+print(f'scikit-learn: {sklearn.__version__}')
+print(f'pandas: {pandas.__version__}')
+print(f'numpy: {np.__version__}')
+print(f'imbalanced-learn: {imblearn.__version__}')
+print(f'xgboost: {xgboost.__version__}')
+print(f'joblib: {joblib.__version__}')
+print(f'streamlit: {streamlit.__version__}')
+print(f'matplotlib: {matplotlib.__version__}')
+print(f'seaborn: {seaborn.__version__}')
+print(f'PyYAML: {yaml.__version__}')
+print('='*60)
+"
+
+Python: 3.11.11 
+scikit-learn: 1.6.1
+pandas: 2.2.3
+numpy: 2.0.1
+imbalanced-learn: 0.13.0
+xgboost: 3.1.2
+joblib: 1.5.1
+streamlit: 1.54.0
+matplotlib: 3.10.0
+seaborn: 0.13.2
+PyYAML: 6.0.3

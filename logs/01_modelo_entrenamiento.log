@@ -123,3 +123,192 @@
 2026-02-17 18:07:43,535 - INFO - Matriz de confusión guardada exitosamente
 2026-02-17 18:07:43,548 - INFO - Medidas de desempeño guardadas exitosamente
 2026-02-17 18:07:43,549 - ERROR - Error durante el registro de los metadatos: Object of type DataFrame is not JSON serializable
+2026-02-20 15:53:34,106 - INFO - ====================================================================================================
+2026-02-20 15:53:34,107 - INFO - Iniciando el entrenamiento del modelo EXP_01
+2026-02-20 15:53:34,115 - INFO - Datos cargados correctamente desde /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/data/raw/patient_churn_dataset.csv
+2026-02-20 15:53:34,116 - INFO - Todas las columnas requeridas están presentes
+2026-02-20 15:53:34,119 - INFO - Datos divididos en train/test
+2026-02-20 15:53:34,119 - INFO - Columnas desde el archivo de configuración:
+2026-02-20 15:53:34,119 - INFO - Numéricas: 4
+2026-02-20 15:53:34,120 - INFO - Ordinales: 1
+2026-02-20 15:53:34,120 - INFO - Nominales OHE: 1
+2026-02-20 15:53:34,120 - INFO - Nominales OHE DROP: 3
+2026-02-20 15:53:34,120 - INFO - Nominales Frecuency: 2
+2026-02-20 15:53:34,120 - INFO - Ignoradas: 2
+2026-02-20 15:53:34,120 - INFO - Pipeline construido exitosamente
+2026-02-20 15:53:34,120 - INFO - Pasos del pipeline ['feature_engineering', 'preprocessor', 'smote', 'model']
+2026-02-20 15:53:34,120 - INFO - Configuración del Grid Search
+2026-02-20 15:53:34,120 - INFO - Scoring  : matthews_corrcoef
+2026-02-20 15:53:34,120 - INFO - n_splits : 3
+2026-02-20 15:53:34,120 - INFO - n_jobs   : -1
+2026-02-20 15:53:34,120 - INFO - Inicio del entrenamiento
+2026-02-20 15:53:45,004 - INFO - Modelo entrenado en 0:00:10.883679
+2026-02-20 15:53:45,004 - INFO - Mejores parámetros:
+2026-02-20 15:53:45,004 - INFO -           model__dtree__criterion: gini
+2026-02-20 15:53:45,004 - INFO -           model__dtree__max_depth: 3
+2026-02-20 15:53:45,004 - INFO -           model__dtree__min_samples_leaf: 2
+2026-02-20 15:53:45,004 - INFO -           model__dtree__min_samples_split: 2
+2026-02-20 15:53:45,004 - INFO -           model__final_estimator__C: 1.0
+2026-02-20 15:53:45,004 - INFO -           model__final_estimator__max_iter: 500
+2026-02-20 15:53:45,004 - INFO -           model__final_estimator__penalty: l2
+2026-02-20 15:53:45,004 - INFO -           model__final_estimator__solver: lbfgs
+2026-02-20 15:53:45,004 - INFO -           model__gnb__var_smoothing: 0.001
+2026-02-20 15:53:45,004 - INFO -           model__knn__algorithm: auto
+2026-02-20 15:53:45,005 - INFO -           model__knn__n_neighbors: 3
+2026-02-20 15:53:45,005 - INFO -           model__knn__p: 1
+2026-02-20 15:53:45,005 - INFO -           model__knn__weights: distance
+2026-02-20 15:53:45,005 - INFO -           model__logistic__C: 0.1
+2026-02-20 15:53:45,005 - INFO -           model__logistic__max_iter: 500
+2026-02-20 15:53:45,005 - INFO -           model__logistic__penalty: l2
+2026-02-20 15:53:45,005 - INFO -           model__logistic__solver: lbfgs
+2026-02-20 15:53:45,005 - INFO -           model__rforest__max_depth: 5
+2026-02-20 15:53:45,005 - INFO -           model__rforest__max_features: sqrt
+2026-02-20 15:53:45,005 - INFO -           model__rforest__min_samples_leaf: 2
+2026-02-20 15:53:45,005 - INFO -           model__rforest__min_samples_split: 2
+2026-02-20 15:53:45,005 - INFO -           model__rforest__n_estimators: 50
+2026-02-20 15:53:45,005 - INFO -           model__svc__C: 1.0
+2026-02-20 15:53:45,005 - INFO -           model__svc__gamma: auto
+2026-02-20 15:53:45,005 - INFO -           model__svc__kernel: rbf
+2026-02-20 15:53:45,005 - INFO -           model__xgboost__colsample_bytree: 0.8
+2026-02-20 15:53:45,005 - INFO -           model__xgboost__gamma: 0.1
+2026-02-20 15:53:45,005 - INFO -           model__xgboost__learning_rate: 0.01
+2026-02-20 15:53:45,005 - INFO -           model__xgboost__max_depth: 3
+2026-02-20 15:53:45,005 - INFO -           model__xgboost__min_child_weight: 1
+2026-02-20 15:53:45,005 - INFO -           model__xgboost__n_estimators: 50
+2026-02-20 15:53:45,005 - INFO -           model__xgboost__subsample: 0.8
+2026-02-20 15:53:45,005 - INFO -           smote__k_neighbors: 3
+2026-02-20 15:53:45,005 - INFO -           smote__sampling_strategy: auto
+2026-02-20 15:53:45,006 - INFO - Mejor score:  -0.0017
+2026-02-20 15:53:45,006 - INFO - Mejor modelo obtenido del Grid Search
+2026-02-20 15:53:45,178 - INFO - Probabilidades obtenidas correctamente
+2026-02-20 15:53:45,674 - INFO - Matriz de confusión guardada exitosamente
+2026-02-20 15:53:45,692 - INFO - Medidas de desempeño guardadas exitosamente
+2026-02-20 15:53:45,692 - ERROR - Error durante el registro de los metadatos: Object of type DataFrame is not JSON serializable
+2026-02-20 15:55:53,487 - INFO - ====================================================================================================
+2026-02-20 15:55:53,487 - INFO - Iniciando el entrenamiento del modelo EXP_01
+2026-02-20 15:55:53,499 - INFO - Datos cargados correctamente desde /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/data/raw/patient_churn_dataset.csv
+2026-02-20 15:55:53,500 - INFO - Todas las columnas requeridas están presentes
+2026-02-20 15:55:53,504 - INFO - Datos divididos en train/test
+2026-02-20 15:55:53,505 - INFO - Columnas desde el archivo de configuración:
+2026-02-20 15:55:53,505 - INFO - Numéricas: 4
+2026-02-20 15:55:53,505 - INFO - Ordinales: 1
+2026-02-20 15:55:53,505 - INFO - Nominales OHE: 1
+2026-02-20 15:55:53,505 - INFO - Nominales OHE DROP: 3
+2026-02-20 15:55:53,505 - INFO - Nominales Frecuency: 2
+2026-02-20 15:55:53,505 - INFO - Ignoradas: 2
+2026-02-20 15:55:53,505 - INFO - Pipeline construido exitosamente
+2026-02-20 15:55:53,505 - INFO - Pasos del pipeline ['feature_engineering', 'preprocessor', 'smote', 'model']
+2026-02-20 15:55:53,505 - INFO - Configuración del Grid Search
+2026-02-20 15:55:53,505 - INFO - Scoring  : matthews_corrcoef
+2026-02-20 15:55:53,505 - INFO - n_splits : 3
+2026-02-20 15:55:53,505 - INFO - n_jobs   : -1
+2026-02-20 15:55:53,505 - INFO - Inicio del entrenamiento
+2026-02-20 15:56:04,080 - INFO - Modelo entrenado en 0:00:10.574273
+2026-02-20 15:56:04,080 - INFO - Mejores parámetros:
+2026-02-20 15:56:04,080 - INFO -           model__dtree__criterion: gini
+2026-02-20 15:56:04,080 - INFO -           model__dtree__max_depth: 3
+2026-02-20 15:56:04,080 - INFO -           model__dtree__min_samples_leaf: 2
+2026-02-20 15:56:04,080 - INFO -           model__dtree__min_samples_split: 2
+2026-02-20 15:56:04,080 - INFO -           model__final_estimator__C: 1.0
+2026-02-20 15:56:04,080 - INFO -           model__final_estimator__max_iter: 500
+2026-02-20 15:56:04,080 - INFO -           model__final_estimator__penalty: l2
+2026-02-20 15:56:04,080 - INFO -           model__final_estimator__solver: lbfgs
+2026-02-20 15:56:04,080 - INFO -           model__gnb__var_smoothing: 0.001
+2026-02-20 15:56:04,080 - INFO -           model__knn__algorithm: auto
+2026-02-20 15:56:04,080 - INFO -           model__knn__n_neighbors: 3
+2026-02-20 15:56:04,080 - INFO -           model__knn__p: 1
+2026-02-20 15:56:04,080 - INFO -           model__knn__weights: distance
+2026-02-20 15:56:04,081 - INFO -           model__logistic__C: 0.1
+2026-02-20 15:56:04,081 - INFO -           model__logistic__max_iter: 500
+2026-02-20 15:56:04,081 - INFO -           model__logistic__penalty: l2
+2026-02-20 15:56:04,081 - INFO -           model__logistic__solver: lbfgs
+2026-02-20 15:56:04,081 - INFO -           model__rforest__max_depth: 5
+2026-02-20 15:56:04,081 - INFO -           model__rforest__max_features: sqrt
+2026-02-20 15:56:04,081 - INFO -           model__rforest__min_samples_leaf: 2
+2026-02-20 15:56:04,081 - INFO -           model__rforest__min_samples_split: 2
+2026-02-20 15:56:04,081 - INFO -           model__rforest__n_estimators: 50
+2026-02-20 15:56:04,081 - INFO -           model__svc__C: 1.0
+2026-02-20 15:56:04,081 - INFO -           model__svc__gamma: auto
+2026-02-20 15:56:04,081 - INFO -           model__svc__kernel: rbf
+2026-02-20 15:56:04,081 - INFO -           model__xgboost__colsample_bytree: 0.8
+2026-02-20 15:56:04,081 - INFO -           model__xgboost__gamma: 0.1
+2026-02-20 15:56:04,081 - INFO -           model__xgboost__learning_rate: 0.01
+2026-02-20 15:56:04,081 - INFO -           model__xgboost__max_depth: 3
+2026-02-20 15:56:04,081 - INFO -           model__xgboost__min_child_weight: 1
+2026-02-20 15:56:04,081 - INFO -           model__xgboost__n_estimators: 50
+2026-02-20 15:56:04,081 - INFO -           model__xgboost__subsample: 0.8
+2026-02-20 15:56:04,081 - INFO -           smote__k_neighbors: 3
+2026-02-20 15:56:04,081 - INFO -           smote__sampling_strategy: auto
+2026-02-20 15:56:04,081 - INFO - Mejor score:  -0.0017
+2026-02-20 15:56:04,081 - INFO - Mejor modelo obtenido del Grid Search
+2026-02-20 15:56:04,254 - INFO - Probabilidades obtenidas correctamente
+2026-02-20 15:56:04,498 - INFO - Matriz de confusión guardada exitosamente
+2026-02-20 15:56:04,510 - INFO - Medidas de desempeño guardadas exitosamente
+2026-02-20 15:56:04,512 - INFO - Metadatos registrados correctamente
+2026-02-20 15:56:04,535 - INFO - Modelo EXP_01 guardado exitosamente
+2026-02-20 15:56:04,535 - INFO - Final del entrenamiento
+2026-02-20 15:56:04,535 - INFO - ====================================================================================================
+2026-02-20 15:59:11,333 - INFO - ====================================================================================================
+2026-02-20 15:59:11,333 - INFO - Iniciando el entrenamiento del modelo EXP_01
+2026-02-20 15:59:11,341 - INFO - Datos cargados correctamente desde /home/jair/Proyectos/Patient_Churn_Prediction_Dataset_for_Healthcare/data/raw/patient_churn_dataset.csv
+2026-02-20 15:59:11,341 - INFO - Todas las columnas requeridas están presentes
+2026-02-20 15:59:11,345 - INFO - Datos divididos en train/test
+2026-02-20 15:59:11,345 - INFO - Columnas desde el archivo de configuración:
+2026-02-20 15:59:11,345 - INFO - Numéricas: 4
+2026-02-20 15:59:11,345 - INFO - Ordinales: 1
+2026-02-20 15:59:11,345 - INFO - Nominales OHE: 1
+2026-02-20 15:59:11,345 - INFO - Nominales OHE DROP: 3
+2026-02-20 15:59:11,345 - INFO - Nominales Frecuency: 2
+2026-02-20 15:59:11,345 - INFO - Ignoradas: 2
+2026-02-20 15:59:11,346 - INFO - Pipeline construido exitosamente
+2026-02-20 15:59:11,346 - INFO - Pasos del pipeline ['feature_engineering', 'preprocessor', 'smote', 'model']
+2026-02-20 15:59:11,346 - INFO - Configuración del Grid Search
+2026-02-20 15:59:11,346 - INFO - Scoring  : matthews_corrcoef
+2026-02-20 15:59:11,346 - INFO - n_splits : 3
+2026-02-20 15:59:11,346 - INFO - n_jobs   : -1
+2026-02-20 15:59:11,346 - INFO - Inicio del entrenamiento
+2026-02-20 16:00:02,287 - INFO - Modelo entrenado en 0:00:50.941463
+2026-02-20 16:00:02,288 - INFO - Mejores parámetros:
+2026-02-20 16:00:02,288 - INFO -           model__dtree__criterion: gini
+2026-02-20 16:00:02,288 - INFO -           model__dtree__max_depth: 3
+2026-02-20 16:00:02,288 - INFO -           model__dtree__min_samples_leaf: 2
+2026-02-20 16:00:02,288 - INFO -           model__dtree__min_samples_split: 2
+2026-02-20 16:00:02,288 - INFO -           model__final_estimator__C: 1.0
+2026-02-20 16:00:02,288 - INFO -           model__final_estimator__max_iter: 500
+2026-02-20 16:00:02,288 - INFO -           model__final_estimator__penalty: l2
+2026-02-20 16:00:02,288 - INFO -           model__final_estimator__solver: lbfgs
+2026-02-20 16:00:02,288 - INFO -           model__gnb__var_smoothing: 0.001
+2026-02-20 16:00:02,288 - INFO -           model__knn__algorithm: auto
+2026-02-20 16:00:02,288 - INFO -           model__knn__n_neighbors: 5
+2026-02-20 16:00:02,288 - INFO -           model__knn__p: 1
+2026-02-20 16:00:02,288 - INFO -           model__knn__weights: distance
+2026-02-20 16:00:02,288 - INFO -           model__logistic__C: 0.1
+2026-02-20 16:00:02,288 - INFO -           model__logistic__max_iter: 500
+2026-02-20 16:00:02,288 - INFO -           model__logistic__penalty: l2
+2026-02-20 16:00:02,288 - INFO -           model__logistic__solver: lbfgs
+2026-02-20 16:00:02,288 - INFO -           model__rforest__max_depth: 5
+2026-02-20 16:00:02,288 - INFO -           model__rforest__max_features: sqrt
+2026-02-20 16:00:02,288 - INFO -           model__rforest__min_samples_leaf: 2
+2026-02-20 16:00:02,289 - INFO -           model__rforest__min_samples_split: 5
+2026-02-20 16:00:02,289 - INFO -           model__rforest__n_estimators: 60
+2026-02-20 16:00:02,289 - INFO -           model__svc__C: 1.0
+2026-02-20 16:00:02,289 - INFO -           model__svc__gamma: auto
+2026-02-20 16:00:02,289 - INFO -           model__svc__kernel: rbf
+2026-02-20 16:00:02,289 - INFO -           model__xgboost__colsample_bytree: 0.8
+2026-02-20 16:00:02,289 - INFO -           model__xgboost__gamma: 0.1
+2026-02-20 16:00:02,289 - INFO -           model__xgboost__learning_rate: 0.01
+2026-02-20 16:00:02,289 - INFO -           model__xgboost__max_depth: 5
+2026-02-20 16:00:02,289 - INFO -           model__xgboost__min_child_weight: 1
+2026-02-20 16:00:02,289 - INFO -           model__xgboost__n_estimators: 50
+2026-02-20 16:00:02,289 - INFO -           model__xgboost__subsample: 0.8
+2026-02-20 16:00:02,289 - INFO -           smote__k_neighbors: 3
+2026-02-20 16:00:02,289 - INFO -           smote__sampling_strategy: auto
+2026-02-20 16:00:02,289 - INFO - Mejor score:  0.0136
+2026-02-20 16:00:02,289 - INFO - Mejor modelo obtenido del Grid Search
+2026-02-20 16:00:02,466 - INFO - Probabilidades obtenidas correctamente
+2026-02-20 16:00:02,740 - INFO - Matriz de confusión guardada exitosamente
+2026-02-20 16:00:02,753 - INFO - Medidas de desempeño guardadas exitosamente
+2026-02-20 16:00:02,754 - INFO - Metadatos registrados correctamente
+2026-02-20 16:00:02,779 - INFO - Modelo EXP_01 guardado exitosamente
+2026-02-20 16:00:02,780 - INFO - Final del entrenamiento
+2026-02-20 16:00:02,780 - INFO - ====================================================================================================

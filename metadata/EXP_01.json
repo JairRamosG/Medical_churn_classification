@@ -10,7 +10,7 @@
         "model__final_estimator__solver": "lbfgs",
         "model__gnb__var_smoothing": 0.001,
         "model__knn__algorithm": "auto",
-        "model__knn__n_neighbors": 3,
+        "model__knn__n_neighbors": 5,
         "model__knn__p": 1,
         "model__knn__weights": "distance",
         "model__logistic__C": 0.1,
@@ -20,20 +20,42 @@
         "model__rforest__max_depth": 5,
         "model__rforest__max_features": "sqrt",
         "model__rforest__min_samples_leaf": 2,
-        "model__rforest__min_samples_split": 2,
-        "model__rforest__n_estimators": 50,
+        "model__rforest__min_samples_split": 5,
+        "model__rforest__n_estimators": 60,
         "model__svc__C": 1.0,
         "model__svc__gamma": "auto",
         "model__svc__kernel": "rbf",
         "model__xgboost__colsample_bytree": 0.8,
         "model__xgboost__gamma": 0.1,
         "model__xgboost__learning_rate": 0.01,
-        "model__xgboost__max_depth": 3,
+        "model__xgboost__max_depth": 5,
         "model__xgboost__min_child_weight": 1,
         "model__xgboost__n_estimators": 50,
         "model__xgboost__subsample": 0.8,
         "smote__k_neighbors": 3,
         "smote__sampling_strategy": "auto"
     },
-    "best_score": -0.0016821581145506452,
-    "scoring": 
+    "best_score": 0.013631501347301978,
+    "scoring": {
+        "Medida": {
+            "0": "Accuracy",
+            "1": "Error Rate",
+            "2": "Recall (Sensitivity)",
+            "3": "Specificity",
+            "4": "Balanced Accuracy",
+            "5": "Precision",
+            "6": "F1 Score",
+            "7": "MCC"
+        },
+        "Valor": {
+            "0": 0.5925,
+            "1": 0.4075,
+            "2": 0.7033,
+            "3": 0.3543,
+            "4": 0.5288,
+            "5": 0.7007,
+            "6": 0.702,
+            "7": 0.0577
+        }
+    }
+}
