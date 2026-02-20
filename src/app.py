@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 from datetime import date, datetime
 
-
 st.set_page_config(
     page_title="Churn Prediction",
     page_icon="",
@@ -24,13 +23,14 @@ def cargar_modelo():
             st.error(f'Modelo no encontrado en {MODELO_FILE}')
             return None
         
-        modelo = joblib.load(MODELO_FILE)
-        st.success('Modelo cargado correctamente')
-        return modelo
+        with st.spinner('Cargando modelo...'):
+            modelo = joblib.load(MODELO_FILE)
+            st.success('Modelo cargado correctamente')
+            return modelo
     except Exception as e:
         st.error(f'Error al cargar el modelo: {str(e)}')
         return None
-    pass
+modelo = cargar_modelo()
 
 def alimentar_pipeline(datos_usuario):
     '''
@@ -42,38 +42,6 @@ def alimentar_pipeline(datos_usuario):
     '''
     df = pd.DataFrame([datos_usuario])
     return df
-
-
-
-
-def predecir_churn(modelo, datos, umbral = 0.5):
-    
-    '''Realiza la predicción del churn de un cliente usando el modelo pkl cargado
-    Args:
-        modelo (pkl): pesos del modelo entrenado
-        datos (dict): datos usados para obtener predicción
-        umbral (float): valor para umbral en la toma de desición de la clasificación 
-    '''
-
-    df_cliente = pd.DataFrame(datos)
-    # Predicción Churn
-    pred = modelo.predict(df_cliente)
-    # Probabilidad clase positiva
-    pred_prob_si = modelo.predict_proba(df_cliente)[::, 1]
-    # Probabilidad ambas clases
-    pred_prob_base = modelo.predict_proba(df_cliente)
-
-    # Volver a filtrar el resultado a traves del umbral
-    if pred_prob_si >= umbral:
-        pred = 1
-        probabilidad = pred_prob_si[0]
-    else:
-        pred = 0
-        probabilidad = 1 - pred_prob_si[0]
-    
-    return pred, probabilidad, pred_prob_base
-
-pred = 0
 
 ###########################################################################################################
 # Intergaz con Streamlit
@@ -90,7 +58,7 @@ with c1:
         age = st.number_input('***Edad***', min_value=0, max_value=120, value=30, step=1)
 
         # Gender	                 - Binario
-        genre = st.radio("***Género***",["Masculino", "Femenino"], index=None)
+        gender = st.radio("***Género***",["Masculino", "Femenino"], index=None)
 
         # State	                     - opcion desplegable
         state = st.selectbox('***Estado***', options=['NC', 'IL', 'FL', 'PA', 'NY', 'OH', 'CA', 'GA', 'TX', 'MI'])
@@ -192,7 +160,7 @@ with c1:
         referrals_made = st.number_input('***Usuarios referidos***', min_value=0, max_value=5, value=1, step=1)
 
         # Distance_To_Facility_Miles - numperico flotante
-        distance_to_facility_miles = st.slider('***Distancia a la clínica más cercana***',
+        distance_to_facility_miles = st.slider('***Distancia a la clínica más cercana en Millas***',
         min_value=0,
         max_value=50,
         value=25,
@@ -200,7 +168,6 @@ with c1:
         help="Arrastra para seleccionar")
 
 with c2:
-
     st.subheader("Predicción del modelo")
     
     umbral = st.slider(
@@ -212,7 +179,36 @@ with c2:
         format="%.0f%%",
         help="Selecciona la sensibilidad del modelo")
     
-    if pred == 1:
-        st.warning('Hay alta probabilidad de que el cliente deje los servicios, tomar acción', icon="⚠️")
-    else:
-        st.success('No hay probabilidad considerable para Churn', icon="✅")
+    if modelo is not None:
+        try:
+            datos_usuario = {'Age': age,
+                              'Gender': 'Male' if gender == 'Masculino' else 'Female',
+                              'State': state,
+                              'Tenure_Months': tenure_months,
+                              'Specialty': specialty,
+                              'Insurance_Type': insurance_type,
+                              'Visits_Last_Year': visits_last_year,
+                              'Missed_Appointments': missed_appointments,
+                              'Days_Since_Last_Visit': days_since_last_visit,
+                              'Last_Interaction_Date': last_interaction_date,
+                              'Overall_Satisfaction': overall_satisfaction,
+                              'Wait_Time_Satisfaction': wait_time_satisfaction,
+                              'Staff_Satisfaction': staff_satisfaction,
+                              'Provider_Rating': provider_rating,
+                              'Avg_Out_Of_Pocket_Cost': avg_out_of_pocket_cost,
+                              'Billing_Issues': 'Yes' if billing_issues == 'Si' else 'No',
+                              'Portal_Usage': 'Yes' if portal_usage == 'Si' else 'No',
+                              'Referrals_Made': referrals_made,
+                              'Distance_To_Facility_Miles': distance_to_facility_miles}
+            df = alimentar_pipeline(datos_usuario)
+            # Predicción
+            if hasattr(modelo, 'predict_proba'):
+                probabilidad = modelo.predict(df)[0][1]
+                pred = 1 if probabilidad >= (umbral/100) else 0
+            else:
+                pred = modelo.predict(df)[0]
+                probabilidad = None
+
+            
+        except Exception as e:
+            st.error(f'Error {str(e)}')
