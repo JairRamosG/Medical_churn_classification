@@ -40,7 +40,7 @@ def alimentar_pipeline(datos_usuario):
     Outputs:
         df (pd.DataFrame): DataFrame con los datos del usuario
     '''
-    df = pd.DataFrame([datos_usuario])
+    df = pd.DataFrame([datos_usuario], index=None)
     return df
 
 ###########################################################################################################
@@ -177,11 +177,12 @@ with c2:
         value=50,
         step=5,
         format="%.0f%%",
-        help="Selecciona la sensibilidad del modelo")
+        help="Bajarlo haría la predicción mas sensible y aumentaría el numero de Churns, subirlo haría la predicción mas confiable pero habría mas Falsos Negativos")
     
     if modelo is not None:
         try:
-            datos_usuario = {'Age': age,
+            datos_usuario = { 'Patient_Id':None,
+                              'Age': age,
                               'Gender': 'Male' if gender == 'Masculino' else 'Female',
                               'State': state,
                               'Tenure_Months': tenure_months,
@@ -204,18 +205,27 @@ with c2:
 
             # Predicción
             if hasattr(modelo, 'predict_proba'):
-                probabilidad = modelo.predict(df)[0][1]
+                probabilidad = modelo.predict_proba(df)[0][1]
                 pred = 1 if probabilidad >= (umbral/100) else 0
+
+                # Tabla 
+                tabla_resultados = pd.DataFrame({
+                    'Probabilidad No Churn': [f"{1-probabilidad:.1%}"],
+                    'Probabilidad Churn': [f"{probabilidad:.1%}"],
+                    'Predicción': ['Churn' if pred == 1 else 'No Churn']
+                })
+                st.dataframe(tabla_resultados, 
+                             hide_index = True)
+
             else:
                 pred = modelo.predict(df)[0]
                 probabilidad = None
 
             # Mostrar resultados
             if pred == 1:
-                st.error('Churn')
+                st.error('Potencial riesgo de Churn con el usuario')
             else:
-                st.success('No Churn')
-
+                st.success('No existe un riesgo de Churn actualmente')
 
         except Exception as e:
             st.error(f'Error al mostrar resultados: {str(e)}')
