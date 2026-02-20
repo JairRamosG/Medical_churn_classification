@@ -12,15 +12,28 @@ st.set_page_config(
     page_icon="",
     layout="wide")
 
-# Raiz
-BASE_DIR = Path(__file__).resolve().parent.parent
-# Rutas para archivos
-MODEL_FILE = Path(os.getenv('MODEL_FILE', BASE_DIR / 'models' / 'EXP_01.pkl'))
+@st.cache_resource
+def cargar_modelo():
+    '''
+    Cargar el modelo ya hecho en el train.py
+    '''
+    try:
+        MODELO_FILE = Path(__file__).parent.parent / "models" / "EXP_01.pkl"
 
-try:
-    modelo = joblib.load(MODEL_FILE)
-except Exception as e:
-    st.error(f'Error al cargar el modelo: {e}')
+        if not MODELO_FILE.exists():
+            st.error(f'Modelo no encontrado en {MODELO_FILE}')
+            return None
+        
+        modelo = joblib.load(MODELO_FILE)
+        st.success('Modelo cargado correctamente')
+        return modelo
+    except Exception as e:
+        st.error(f'Error al cargar el modelo: {str(e)}')
+        return None
+    pass
+
+
+
 
 def predecir_churn(modelo, datos, umbral = 0.5):
     
@@ -80,7 +93,7 @@ with c1:
         help="Arrastra para seleccionar los meses de antigüedad")
 
         # Specialty	                 - opcion desplegable
-        specialty = st.selectbox('***Estado***', options=['Médico General', 
+        specialty = st.selectbox('***Especialidad***', options=['Médico General', 
                                                           'Medicina Familiar',
                                                           'Ortopedista',
                                                           'Neurología',
