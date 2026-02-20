@@ -1,19 +1,3 @@
-"print('VERSIONES EXACTAS DEL ENTORNO')
-print('='*60)
-print(f'Python: {sys.version}')
-print(f'scikit-learn: {sklearn.__version__}')
-print(f'pandas: {pandas.__version__}')
-print(f'numpy: {np.__version__}')
-print(f'imbalanced-learn: {imblearn.__version__}')
-print(f'xgboost: {xgboost.__version__}')
-print(f'joblib: {joblib.__version__}')
-print(f'streamlit: {streamlit.__version__}')
-print(f'matplotlib: {matplotlib.__version__}')
-print(f'seaborn: {seaborn.__version__}')
-print(f'PyYAML: {yaml.__version__}')
-print('='*60)
-"
-
 Python: 3.11.11 
 scikit-learn: 1.6.1
 pandas: 2.2.3
