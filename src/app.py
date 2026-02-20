@@ -25,7 +25,7 @@ def cargar_modelo():
         
         with st.spinner('Cargando modelo...'):
             modelo = joblib.load(MODELO_FILE)
-            st.success('Modelo cargado correctamente')
+            st.success('Modelo cargado  ')
             return modelo
     except Exception as e:
         st.error(f'Error al cargar el modelo: {str(e)}')
@@ -196,11 +196,12 @@ with c2:
                               'Staff_Satisfaction': staff_satisfaction,
                               'Provider_Rating': provider_rating,
                               'Avg_Out_Of_Pocket_Cost': avg_out_of_pocket_cost,
-                              'Billing_Issues': 'Yes' if billing_issues == 'Si' else 'No',
-                              'Portal_Usage': 'Yes' if portal_usage == 'Si' else 'No',
+                              'Billing_Issues': 1 if billing_issues == 'Si' else 0,
+                              'Portal_Usage': 1 if portal_usage == 'Si' else 0,
                               'Referrals_Made': referrals_made,
                               'Distance_To_Facility_Miles': distance_to_facility_miles}
             df = alimentar_pipeline(datos_usuario)
+
             # Predicción
             if hasattr(modelo, 'predict_proba'):
                 probabilidad = modelo.predict(df)[0][1]
@@ -209,6 +210,12 @@ with c2:
                 pred = modelo.predict(df)[0]
                 probabilidad = None
 
-            
+            # Mostrar resultados
+            if pred == 1:
+                st.error('Churn')
+            else:
+                st.success('No Churn')
+
+
         except Exception as e:
-            st.error(f'Error {str(e)}')
+            st.error(f'Error al mostrar resultados: {str(e)}')
