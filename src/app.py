@@ -6,6 +6,12 @@ import os
 from pathlib import Path
 from datetime import date, datetime
 
+
+st.set_page_config(
+    page_title="Churn Prediction",
+    page_icon="",
+    layout="wide")
+
 # Raiz
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Rutas para archivos
@@ -48,12 +54,6 @@ pred = 0
 ###########################################################################################################
 # Intergaz con Streamlit
 ###########################################################################################################
-
-st.set_page_config(
-    page_title="Churn Prediction",
-    page_icon="",
-    layout="wide")
-
 st.title('Churn para clientes en el sector medico')
 
 c1, c2 = st.columns([4, 2])
