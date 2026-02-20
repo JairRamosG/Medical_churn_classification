@@ -32,6 +32,17 @@ def cargar_modelo():
         return None
     pass
 
+def alimentar_pipeline(datos_usuario):
+    '''
+    Convertir la información del formulario a una entrada que si acepte el pipeline
+    Args:
+        datos_usuario (dict): Todos los valores que venian en el formulario
+    Outputs:
+        df (pd.DataFrame): DataFrame con los datos del usuario
+    '''
+    df = pd.DataFrame([datos_usuario])
+    return df
+
 
 
 
