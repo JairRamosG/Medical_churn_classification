@@ -51,7 +51,7 @@ pred = 0
 
 st.set_page_config(
     page_title="Churn Prediction",
-    page_icon="🏥",
+    page_icon="",
     layout="wide")
 
 st.title('Churn para clientes en el sector medico')
